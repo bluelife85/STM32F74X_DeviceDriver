@@ -95,6 +95,7 @@
 typedef enum
 {
 /******  Cortex-M7 Processor Exceptions Numbers ****************************************************************/
+  HardFault_IRQn			  = -16,
   NonMaskableInt_IRQn         = -14,    /*!< 2 Non Maskable Interrupt                                          */
   MemoryManagement_IRQn       = -12,    /*!< 4 Cortex-M7 Memory Management Interrupt                           */
   BusFault_IRQn               = -11,    /*!< 5 Cortex-M7 Bus Fault Interrupt                                   */
