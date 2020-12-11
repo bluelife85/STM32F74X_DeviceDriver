@@ -6,7 +6,7 @@
 class CPU{
 private:
 	void (*coreHandlers[9])(void);
-	void (*periphHandler[])(void);
+	void (*EventCallbacks[])(void);
 public:
 	CPU();
 };
@@ -26,29 +26,29 @@ void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
 
-void WWDG_IRQHandler(void);
-void PVD_IRQHandler(void);
-void TAMP_STAMP_IRQHandler(void);
-void RTC_WKUP_IRQHandler(void);
-void FLASH_IRQHandler(void);
-void RCC_IRQHandler(void);
-void EXTI0_IRQHandler(void);
-void EXTI1_IRQHandler(void);
-void EXTI2_IRQHandler(void);
-void EXTI3_IRQHandler(void);
-void EXTI4_IRQHandler(void);
-void DMA1_Stream0_IRQHandler(void);
-void DMA1_Stream1_IRQHandler(void);
-void DMA1_Stream2_IRQHandler(void);
-void DMA1_Stream3_IRQHandler(void);
-void DMA1_Stream4_IRQHandler(void);
-void DMA1_Stream5_IRQHandler(void);
-void DMA1_Stream6_IRQHandler(void);
-void ADC_IRQHandler(void);
-void CAN1_TX_IRQHandler(void);
-void CAN1_RX0_IRQHandler(void);
-void CAN1_RX1_IRQHandler(void);
-void CAN1_SCE_IRQHandler(void);
+void WWDG_IRQHandler(void);							/* it has 1 event. */
+void PVD_IRQHandler(void);							/* it has 1 event. */
+void TAMP_STAMP_IRQHandler(void);					/* it has 1 event. */
+void RTC_WKUP_IRQHandler(void);						/* it has 1 event. */
+void FLASH_IRQHandler(void);						/* it has 3 events. */
+void RCC_IRQHandler(void);							/* it has 7 events. */
+void EXTI0_IRQHandler(void);						/* it has 2 events. */
+void EXTI1_IRQHandler(void);						/* it has 2 events. */
+void EXTI2_IRQHandler(void);						/* it has 2 events. */
+void EXTI3_IRQHandler(void);						/* it has 2 events. */
+void EXTI4_IRQHandler(void);						/* it has 2 events. */
+void DMA1_Stream0_IRQHandler(void);					/* it has 5 events. */
+void DMA1_Stream1_IRQHandler(void);					/* it has 5 events. */
+void DMA1_Stream2_IRQHandler(void);					/* it has 5 events. */
+void DMA1_Stream3_IRQHandler(void);					/* it has 5 events. */
+void DMA1_Stream4_IRQHandler(void);					/* it has 5 events. */
+void DMA1_Stream5_IRQHandler(void);					/* it has 5 events. */
+void DMA1_Stream6_IRQHandler(void);					/* it has 5 events. */
+void ADC_IRQHandler(void);							/* it has 12 events. */
+void CAN1_TX_IRQHandler(void);						/* it has 3 events. */
+void CAN1_RX0_IRQHandler(void);						/* it has 3 events. */
+void CAN1_RX1_IRQHandler(void);						/* it has 3 events. */
+void CAN1_SCE_IRQHandler(void);						/* it has 5 events. */
 void EXTI9_5_IRQHandler(void);
 void TIM1_BRK_TIM9_IRQHandler(void);
 void TIM1_UP_TIM10_IRQHandler(void);
