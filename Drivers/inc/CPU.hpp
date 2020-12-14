@@ -49,14 +49,14 @@ void CAN1_TX_IRQHandler(void);						/* it has 3 events. */
 void CAN1_RX0_IRQHandler(void);						/* it has 3 events. */
 void CAN1_RX1_IRQHandler(void);						/* it has 3 events. */
 void CAN1_SCE_IRQHandler(void);						/* it has 5 events. */
-void EXTI9_5_IRQHandler(void);
-void TIM1_BRK_TIM9_IRQHandler(void);
-void TIM1_UP_TIM10_IRQHandler(void);
-void TIM1_TRG_COM_TIM11_IRQHandler(void);
-void TIM1_CC_IRQHandler(void);
-void TIM2_IRQHandler(void);
-void TIM3_IRQHandler(void);
-void TIM4_IRQHandler(void);
+void EXTI9_5_IRQHandler(void);						/* it has 5 events. */
+void TIM1_BRK_TIM9_IRQHandler(void);				/* it has 5 events. */
+void TIM1_UP_TIM10_IRQHandler(void);				/* it has 5 events. */
+void TIM1_TRG_COM_TIM11_IRQHandler(void);			/* it has 5 events. */
+void TIM1_CC_IRQHandler(void);						/* it has 4 events. */
+void TIM2_IRQHandler(void);							/* it has 6 events. */
+void TIM3_IRQHandler(void);							/* it has 6 events. */
+void TIM4_IRQHandler(void);							/* it has 6 events. */
 void I2C1_EV_IRQHandler(void);
 void I2C1_ER_IRQHandler(void);
 void I2C2_EV_IRQHandler(void);
