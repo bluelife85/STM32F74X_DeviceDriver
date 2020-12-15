@@ -160,7 +160,7 @@ void NMI_Handler(void) {
 
 	if(handler == NULL) {
 
-		assert_failed("Attempted typeid of NULL pointer.", __LINE__);
+		assert_failed("Attempted to access a NULL pointer.", __LINE__);
 	}
 
 	handler();
@@ -172,7 +172,7 @@ void HardFault_Handler(void) {
 
 	if(handler == NULL) {
 
-		assert_failed("Attempted typeid of NULL pointer.", __LINE__);
+		assert_failed("Attempted to access a NULL pointer.", __LINE__);
 	}
 
 	handler();
@@ -184,7 +184,7 @@ void MemManage_Handler(void) {
 
 	if(handler == NULL) {
 
-		assert_failed("Attempted typeid of NULL pointer.", __LINE__);
+		assert_failed("Attempted to access a NULL pointer.", __LINE__);
 	}
 
 	handler();
@@ -196,7 +196,7 @@ void BusFault_Handler(void) {
 
 	if(handler == NULL) {
 
-		assert_failed("Attempted typeid of NULL pointer.", __LINE__);
+		assert_failed("Attempted to access a NULL pointer.", __LINE__);
 	}
 
 	handler();
@@ -208,7 +208,7 @@ void UsageFault_Handler(void) {
 
 	if(handler == NULL) {
 
-		assert_failed("Attempted typeid of NULL pointer.", __LINE__);
+		assert_failed("Attempted to access a NULL pointer.", __LINE__);
 	}
 
 	handler();
@@ -220,7 +220,7 @@ void SVC_Handler(void) {
 
 	if(handler == NULL) {
 
-		assert_failed("Attempted typeid of NULL pointer.", __LINE__);
+		assert_failed("Attempted to access a NULL pointer.", __LINE__);
 	}
 
 	handler();
@@ -232,7 +232,7 @@ void DebugMon_Handler(void) {
 
 	if(handler == NULL) {
 
-		assert_failed("Attempted typeid of NULL pointer.", __LINE__);
+		assert_failed("Attempted to access a NULL pointer.", __LINE__);
 	}
 
 	handler();
@@ -244,7 +244,7 @@ void PendSV_Handler(void) {
 
 	if(handler == NULL) {
 
-		assert_failed("Attempted typeid of NULL pointer.", __LINE__);
+		assert_failed("Attempted to access a NULL pointer.", __LINE__);
 	}
 
 	handler();
@@ -256,7 +256,7 @@ void SysTick_Handler(void) {
 
 	if(handler == NULL) {
 
-		assert_failed("Attempted typeid of NULL pointer.", __LINE__);
+		assert_failed("Attempted to access a NULL pointer.", __LINE__);
 	}
 
 	handler();
