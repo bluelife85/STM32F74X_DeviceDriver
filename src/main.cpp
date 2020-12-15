@@ -29,6 +29,7 @@ SOFTWARE.
 
 /* Includes */
 #include "stm32f74x.h"
+#include "stddef.h"
 
 /* Private macro */
 /* Private variables */

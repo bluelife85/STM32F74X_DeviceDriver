@@ -225,6 +225,7 @@ typedef enum
 #include "core_cm7.h"                     /*!< Cortex-M7 processor and core peripherals      */
 
 #include <stdint.h>
+#include <stddef.h>
 
 /** @addtogroup Peripheral_registers_structures
   * @{

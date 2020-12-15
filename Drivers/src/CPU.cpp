@@ -100,7 +100,7 @@ void CPUClass::enableIRQ(enum CoreInterrupt irq, void (*evt)(void)) {
 		break;
 	}
 
-	CPU.coreHandlers[index] = evt;
+	this->coreHandlers[index] = evt;
 }
 
 void CPUClass::disableIRQ(enum CoreInterrupt irq) {
@@ -135,6 +135,13 @@ void CPUClass::disableIRQ(enum CoreInterrupt irq) {
 		NVIC_DisableIRQ(SysTick_IRQn);
 		break;
 	}
+
+	this->coreHandlers[index] = NULL;
+}
+
+CallbackHandler CPUClass::getHandler(enum CoreInterrupt irq) {
+
+	return this->coreHandlers[(uint32_t)irq];
 }
 
 void assert_failed(const char* file, uint32_t line) {
@@ -147,15 +154,113 @@ void assert_failed(const char* file, uint32_t line) {
 /**
  * interrupt vectors
  */
-void NMI_Handler(void) {}
-void HardFault_Handler(void) {}
-void MemManage_Handler(void) {}
-void BusFault_Handler(void) {}
-void UsageFault_Handler(void) {}
-void SVC_Handler(void) {}
-void DebugMon_Handler(void) {}
-void PendSV_Handler(void) {}
-void SysTick_Handler(void) {}
+void NMI_Handler(void) {
+
+	CallbackHandler handler = CPU.getHandler(CPU.IRQ_NMI);
+
+	if(handler == NULL) {
+
+		assert_failed("Attempted typeid of NULL pointer.", __LINE__);
+	}
+
+	handler();
+}
+
+void HardFault_Handler(void) {
+
+	CallbackHandler handler = CPU.getHandler(CPU.IRQ_HardFault);
+
+	if(handler == NULL) {
+
+		assert_failed("Attempted typeid of NULL pointer.", __LINE__);
+	}
+
+	handler();
+}
+
+void MemManage_Handler(void) {
+
+	CallbackHandler handler = CPU.getHandler(CPU.IRQ_MemManage);
+
+	if(handler == NULL) {
+
+		assert_failed("Attempted typeid of NULL pointer.", __LINE__);
+	}
+
+	handler();
+}
+
+void BusFault_Handler(void) {
+
+	CallbackHandler handler = CPU.getHandler(CPU.IRQ_BusFault);
+
+	if(handler == NULL) {
+
+		assert_failed("Attempted typeid of NULL pointer.", __LINE__);
+	}
+
+	handler();
+}
+
+void UsageFault_Handler(void) {
+
+	CallbackHandler handler = CPU.getHandler(CPU.IRQ_UsageFault);
+
+	if(handler == NULL) {
+
+		assert_failed("Attempted typeid of NULL pointer.", __LINE__);
+	}
+
+	handler();
+}
+
+void SVC_Handler(void) {
+
+	CallbackHandler handler = CPU.getHandler(CPU.IRQ_SVCall);
+
+	if(handler == NULL) {
+
+		assert_failed("Attempted typeid of NULL pointer.", __LINE__);
+	}
+
+	handler();
+}
+
+void DebugMon_Handler(void) {
+
+	CallbackHandler handler = CPU.getHandler(CPU.IRQ_DebugMon);
+
+	if(handler == NULL) {
+
+		assert_failed("Attempted typeid of NULL pointer.", __LINE__);
+	}
+
+	handler();
+}
+
+void PendSV_Handler(void) {
+
+	CallbackHandler handler = CPU.getHandler(CPU.IRQ_PendSV);
+
+	if(handler == NULL) {
+
+		assert_failed("Attempted typeid of NULL pointer.", __LINE__);
+	}
+
+	handler();
+}
+
+void SysTick_Handler(void) {
+
+	CallbackHandler handler = CPU.getHandler(CPU.IRQ_SysTick);
+
+	if(handler == NULL) {
+
+		assert_failed("Attempted typeid of NULL pointer.", __LINE__);
+	}
+
+	handler();
+}
 
 void WWDG_IRQHandler(void) {}
 void PVD_IRQHandler(void) {}

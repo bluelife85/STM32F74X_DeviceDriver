@@ -4,12 +4,12 @@
 #include "stm32f74x.h"
 
 
-
+typedef void (*CallbackHandler)(void);
 
 class CPUClass {
 private:
-	void (*coreHandlers[9])(void);
-	void (*EventCallbacks[598])(void);
+	CallbackHandler coreHandlers[9];
+	CallbackHandler EventCallbacks[598];
 public:
 	enum CoreInterrupt {
 		IRQ_NMI							= 0,
@@ -26,6 +26,7 @@ public:
 	CPUClass();
 	void enableIRQ(enum CoreInterrupt irq, void (*evt)(void));
 	void disableIRQ(enum CoreInterrupt irq);
+	CallbackHandler getHandler(enum CoreInterrupt irq);
 };
 
 #ifdef __cplusplus
