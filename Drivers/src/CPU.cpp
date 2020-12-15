@@ -1,4 +1,3 @@
-
 #include "CPU.hpp"
 
 #ifdef USE_OSC
@@ -16,10 +15,10 @@
 
 #define FLASH_LATENCY (9)
 
-CPU* cpuObject;
+CPUClass CPU;
 uint8_t isInitialized;
 
-CPU::CPU(void) {
+CPUClass::CPUClass(void) {
 
 	uint32_t pllM = XTAL_VALUE;
 
@@ -27,8 +26,6 @@ CPU::CPU(void) {
 
 		assert_failed(__FILE__, __LINE__);
 	}
-
-	cpuObject = this;
 
 	SCB_EnableICache();
 	SCB_EnableDCache();
@@ -70,7 +67,79 @@ CPU::CPU(void) {
     while((RCC->CFGR & 0x00000008) == 0) {}
 }
 
+void CPUClass::enableIRQ(enum CoreInterrupt irq, void (*evt)(void)) {
+
+	uint32_t index = (uint32_t) irq;
+
+	switch(irq) {
+	case CPUClass::IRQ_NMI:
+		NVIC_EnableIRQ(NonMaskableInt_IRQn);
+		break;
+	case CPUClass::IRQ_HardFault:
+		break;
+	case CPUClass::IRQ_MemManage:
+		NVIC_EnableIRQ(MemoryManagement_IRQn);
+		break;
+	case CPUClass::IRQ_BusFault:
+		NVIC_EnableIRQ(BusFault_IRQn);
+		break;
+	case CPUClass::IRQ_UsageFault:
+		NVIC_EnableIRQ(UsageFault_IRQn);
+		break;
+	case CPUClass::IRQ_SVCall:
+		NVIC_EnableIRQ(SVCall_IRQn);
+		break;
+	case CPUClass::IRQ_DebugMon:
+		NVIC_EnableIRQ(DebugMonitor_IRQn);
+		break;
+	case CPUClass::IRQ_PendSV:
+		NVIC_EnableIRQ(PendSV_IRQn);
+		break;
+	case CPUClass::IRQ_SysTick:
+		NVIC_EnableIRQ(SysTick_IRQn);
+		break;
+	}
+
+	CPU.coreHandlers[index] = evt;
+}
+
+void CPUClass::disableIRQ(enum CoreInterrupt irq) {
+
+	uint32_t index = (uint32_t) irq;
+
+	switch(irq) {
+	case CPUClass::IRQ_NMI:
+		NVIC_DisableIRQ(NonMaskableInt_IRQn);
+		break;
+	case CPUClass::IRQ_HardFault:
+		break;
+	case CPUClass::IRQ_MemManage:
+		NVIC_DisableIRQ(MemoryManagement_IRQn);
+		break;
+	case CPUClass::IRQ_BusFault:
+		NVIC_DisableIRQ(BusFault_IRQn);
+		break;
+	case CPUClass::IRQ_UsageFault:
+		NVIC_DisableIRQ(UsageFault_IRQn);
+		break;
+	case CPUClass::IRQ_SVCall:
+		NVIC_DisableIRQ(SVCall_IRQn);
+		break;
+	case CPUClass::IRQ_DebugMon:
+		NVIC_DisableIRQ(DebugMonitor_IRQn);
+		break;
+	case CPUClass::IRQ_PendSV:
+		NVIC_DisableIRQ(PendSV_IRQn);
+		break;
+	case CPUClass::IRQ_SysTick:
+		NVIC_DisableIRQ(SysTick_IRQn);
+		break;
+	}
+}
+
 void assert_failed(const char* file, uint32_t line) {
+
+	__disable_irq();
 
     while(1) {}
 }

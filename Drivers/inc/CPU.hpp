@@ -3,12 +3,29 @@
 
 #include "stm32f74x.h"
 
-class CPU{
+
+
+
+class CPUClass {
 private:
 	void (*coreHandlers[9])(void);
 	void (*EventCallbacks[598])(void);
 public:
-	CPU();
+	enum CoreInterrupt {
+		IRQ_NMI							= 0,
+		IRQ_HardFault					= 1,
+		IRQ_MemManage					= 2,
+		IRQ_BusFault					= 3,
+		IRQ_UsageFault					= 4,
+		IRQ_SVCall						= 5,
+		IRQ_DebugMon					= 6,
+		IRQ_PendSV						= 7,
+		IRQ_SysTick						= 8
+	};
+
+	CPUClass();
+	void enableIRQ(enum CoreInterrupt irq, void (*evt)(void));
+	void disableIRQ(enum CoreInterrupt irq);
 };
 
 #ifdef __cplusplus
@@ -131,5 +148,7 @@ void SPDIF_RX_IRQHandler(void);						/* it has 9 events. */
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
+
+extern CPUClass CPU;
 
 #endif /* INC_CPU_HPP_ */
