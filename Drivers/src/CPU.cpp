@@ -144,6 +144,35 @@ CallbackHandler CPUClass::getHandler(enum CoreInterrupt irq) {
 	return this->coreHandlers[(uint32_t)irq];
 }
 
+CallbackHandler CPUClass::getHandler(enum EventInterrupt irq) {
+
+	return this->EventCallbacks[(uint32_t)irq];
+}
+
+void CPUClass::clearEventTrigger(enum EventInterrupt irq) {
+
+	switch(irq) {
+	case CPUClass::IRQ_WWDG_EVT_EARLY_WAKEUP:
+		WWDG->SR &= 0xFFFFFFFE;
+		break;
+	case CPUClass::IRQ_EXTI_EVT_PVD:
+		EXTI->PR |= 0x00010000;
+		break;
+	case CPUClass::IRQ_RTC_EVT_TIMESTAMP:
+		RTC->ISR &= 0x00020800;
+		break;
+	case CPUClass::IRQ_RTC_EVT_TAMP1:
+	    RTC->ISR &= 0x00002000;
+		break;
+	case CPUClass::IRQ_RTC_EVT_TAMP2:
+	    RTC->ISR &= 0x00004000;
+		break;
+	case CPUClass::IRQ_RTC_EVT_TAMP3:
+	    RTC->ISR &= 0x00008000;
+		break;
+	}
+}
+
 void assert_failed(const char* file, uint32_t line) {
 
 	__disable_irq();
@@ -262,9 +291,56 @@ void SysTick_Handler(void) {
 	handler();
 }
 
-void WWDG_IRQHandler(void) {}
-void PVD_IRQHandler(void) {}
-void TAMP_STAMP_IRQHandler(void) {}
+void WWDG_IRQHandler(void) {
+
+	CallbackHandler handler = CPU.getHandler(CPU.IRQ_WWDG_EVT_EARLY_WAKEUP);
+
+	if(handler == NULL) {
+
+		assert_failed("Attempted to access a NULL pointer.", __LINE__);
+	}
+
+	handler();
+
+	CPU.clearEventTrigger(CPU.IRQ_WWDG_EVT_EARLY_WAKEUP);
+}
+
+void PVD_IRQHandler(void) {
+
+	CallbackHandler handler = CPU.getHandler(CPU.IRQ_EXTI_EVT_PVD);
+
+	if(handler == NULL) {
+
+		assert_failed("Attempted to access a NULL pointer.", __LINE__);
+	}
+
+	handler();
+
+	CPU.clearEventTrigger(CPU.IRQ_EXTI_EVT_PVD);
+}
+
+void TAMP_STAMP_IRQHandler(void) {
+
+	CPUClass::EventInterrupt evt;
+	CallbackHandler handler;
+
+	evt = (RTC->ISR & 0x00000800) ? CPU.IRQ_RTC_EVT_TIMESTAMP :
+			(RTC->ISR & 0x00002000) ? CPU.IRQ_RTC_EVT_TAMP1 :
+			(RTC->ISR & 0x00004000) ? CPU.IRQ_RTC_EVT_TAMP2 :
+			(RTC->ISR & 0x00008000) ? CPU.IRQ_RTC_EVT_TAMP3 : CPU.IRQ_EVT_INDEX_ERROR;
+
+	handler = CPU.getHandler(evt);
+
+	if(handler == NULL) {
+
+		assert_failed("Attempted to access a NULL pointer.", __LINE__);
+	}
+
+	handler();
+
+	CPU.clearEventTrigger(evt);
+}
+
 void RTC_WKUP_IRQHandler(void) {}
 void FLASH_IRQHandler(void) {}
 void RCC_IRQHandler(void) {}

@@ -9,24 +9,39 @@ typedef void (*CallbackHandler)(void);
 class CPUClass {
 private:
 	CallbackHandler coreHandlers[9];
-	CallbackHandler EventCallbacks[598];
+	CallbackHandler EventCallbacks[601];
 public:
 	enum CoreInterrupt {
-		IRQ_NMI							= 0,
-		IRQ_HardFault					= 1,
-		IRQ_MemManage					= 2,
-		IRQ_BusFault					= 3,
-		IRQ_UsageFault					= 4,
-		IRQ_SVCall						= 5,
-		IRQ_DebugMon					= 6,
-		IRQ_PendSV						= 7,
-		IRQ_SysTick						= 8
+		IRQ_NMI                                             = 0,
+		IRQ_HardFault                                       = 1,
+		IRQ_MemManage                                       = 2,
+		IRQ_BusFault                                        = 3,
+		IRQ_UsageFault                                      = 4,
+		IRQ_SVCall                                          = 5,
+		IRQ_DebugMon                                        = 6,
+		IRQ_PendSV                                          = 7,
+		IRQ_SysTick                                         = 8
 	};
 
+	enum EventInterrupt {
+		IRQ_EVT_INDEX_ERROR                                 = 65535,
+		IRQ_WWDG_EVT_EARLY_WAKEUP                           = 0,
+		IRQ_EXTI_EVT_PVD                                    = 1,
+		IRQ_RTC_EVT_TAMP1                                   = 2,
+		IRQ_RTC_EVT_TAMP2                                   = 3,
+		IRQ_RTC_EVT_TAMP3                                   = 4,
+		IRQ_RTC_EVT_TIMESTAMP                               = 5,
+
+	};
 	CPUClass();
 	void enableIRQ(enum CoreInterrupt irq, void (*evt)(void));
 	void disableIRQ(enum CoreInterrupt irq);
+	void enableIRQ(enum EventInterrupt irq, void (*evt)(void));
+	void disableIRQ(enum EventInterrupt irq);
+
 	CallbackHandler getHandler(enum CoreInterrupt irq);
+	CallbackHandler getHandler(enum EventInterrupt irq);
+	void clearEventTrigger(enum EventInterrupt irq);
 };
 
 #ifdef __cplusplus
@@ -46,7 +61,7 @@ void SysTick_Handler(void);
 
 void WWDG_IRQHandler(void);							/* it has 1 event. */
 void PVD_IRQHandler(void);							/* it has 1 event. */
-void TAMP_STAMP_IRQHandler(void);					/* it has 1 event. */
+void TAMP_STAMP_IRQHandler(void);					/* it has 4 events. */
 void RTC_WKUP_IRQHandler(void);						/* it has 1 event. */
 void FLASH_IRQHandler(void);						/* it has 3 events. */
 void RCC_IRQHandler(void);							/* it has 7 events. */
