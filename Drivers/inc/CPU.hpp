@@ -31,7 +31,20 @@ public:
 		IRQ_RTC_EVT_TAMP2                                   = 3,
 		IRQ_RTC_EVT_TAMP3                                   = 4,
 		IRQ_RTC_EVT_TIMESTAMP                               = 5,
-
+		IRQ_RTC_EVT_WAKEUP                                  = 6,
+		IRQ_FLASH_EVT_EOP                                   = 7,
+		IRQ_FLASH_EVT_WRITE_PROTECTION_ERR                  = 8,
+		IRQ_FLASH_EVT_ALIGNMENT_ERR                         = 9,
+		IRQ_FLASH_EVT_PARALLEISM_ERR                        = 10,
+		IRQ_FLASH_EVT_SEQUENCE_ERR                          = 11,
+		IRQ_RCC_EVT_LSI_READY                               = 12,
+		IRQ_RCC_EVT_LSE_READY                               = 13,
+		IRQ_RCC_EVT_HSI_READY                               = 14,
+		IRQ_RCC_EVT_HSE_READY                               = 15,
+		IRQ_RCC_EVT_PLL_READY                               = 16,
+		IRQ_RCC_EVT_PLLI2S_READY                            = 17,
+		IRQ_RCC_EVT_PLLSAI_READY                            = 18,
+		IRQ_RCC_EVT_CSS                                     = 19,
 	};
 	CPUClass();
 	void enableIRQ(enum CoreInterrupt irq, void (*evt)(void));
@@ -59,12 +72,12 @@ void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
 
-void WWDG_IRQHandler(void);							/* it has 1 event. */
-void PVD_IRQHandler(void);							/* it has 1 event. */
-void TAMP_STAMP_IRQHandler(void);					/* it has 4 events. */
-void RTC_WKUP_IRQHandler(void);						/* it has 1 event. */
-void FLASH_IRQHandler(void);						/* it has 3 events. */
-void RCC_IRQHandler(void);							/* it has 7 events. */
+void WWDG_IRQHandler(void);
+void PVD_IRQHandler(void);
+void TAMP_STAMP_IRQHandler(void);
+void RTC_WKUP_IRQHandler(void);
+void FLASH_IRQHandler(void);
+void RCC_IRQHandler(void);							/* it has 8 events. */
 void EXTI0_IRQHandler(void);						/* it has 2 events. */
 void EXTI1_IRQHandler(void);						/* it has 2 events. */
 void EXTI2_IRQHandler(void);						/* it has 2 events. */

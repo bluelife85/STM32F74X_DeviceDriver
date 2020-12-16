@@ -146,12 +146,26 @@ CallbackHandler CPUClass::getHandler(enum CoreInterrupt irq) {
 
 CallbackHandler CPUClass::getHandler(enum EventInterrupt irq) {
 
-	return this->EventCallbacks[(uint32_t)irq];
+    CallbackHandler ret = NULL;
+
+    try {
+        if(irq == IRQ_EVT_INDEX_ERROR)
+            throw "Not correct IRQ";
+
+        ret = this->EventCallbacks[(uint32_t)irq];
+    } catch (const char* s) {
+
+        assert_failed(s,__LINE__);
+    }
+
+	return ret;
 }
 
 void CPUClass::clearEventTrigger(enum EventInterrupt irq) {
 
 	switch(irq) {
+	case CPUClass::IRQ_EVT_INDEX_ERROR:
+	    break;
 	case CPUClass::IRQ_WWDG_EVT_EARLY_WAKEUP:
 		WWDG->SR &= 0xFFFFFFFE;
 		break;
@@ -170,6 +184,24 @@ void CPUClass::clearEventTrigger(enum EventInterrupt irq) {
 	case CPUClass::IRQ_RTC_EVT_TAMP3:
 	    RTC->ISR &= 0x00008000;
 		break;
+	case CPUClass::IRQ_RTC_EVT_WAKEUP:
+	    RTC->ISR &= 0x00000400;
+	    break;
+	case CPUClass::IRQ_FLASH_EVT_EOP:
+	    FLASH->SR |= 0x00000001;
+	    break;
+	case CPUClass::IRQ_FLASH_EVT_WRITE_PROTECTION_ERR:
+	    FLASH->SR |= 0x00000012;
+	    break;
+	case CPUClass::IRQ_FLASH_EVT_ALIGNMENT_ERR:
+	    FLASH->SR |= 0x00000022;
+	    break;
+	case CPUClass::IRQ_FLASH_EVT_PARALLEISM_ERR:
+	    FLASH->SR |= 0x00000042;
+	    break;
+	case CPUClass::IRQ_FLASH_EVT_SEQUENCE_ERR:
+	    FLASH->SR |= 0x00000082;
+	    break;
 	}
 }
 
@@ -341,9 +373,69 @@ void TAMP_STAMP_IRQHandler(void) {
 	CPU.clearEventTrigger(evt);
 }
 
-void RTC_WKUP_IRQHandler(void) {}
-void FLASH_IRQHandler(void) {}
-void RCC_IRQHandler(void) {}
+void RTC_WKUP_IRQHandler(void) {
+
+    CallbackHandler handler = CPU.getHandler(CPU.IRQ_RTC_EVT_WAKEUP);
+
+    if(handler == NULL) {
+
+        assert_failed("Attempted to access a NULL pointer.", __LINE__);
+    }
+
+    handler();
+
+    CPU.clearEventTrigger(CPU.IRQ_RTC_EVT_WAKEUP);
+}
+
+void FLASH_IRQHandler(void) {
+
+    CPUClass::EventInterrupt evt;
+    CallbackHandler handler;
+
+    evt = (FLASH->SR & 0x00000001) ? CPU.IRQ_FLASH_EVT_EOP :
+            (FLASH->SR & 0x00000010) ? CPU.IRQ_FLASH_EVT_WRITE_PROTECTION_ERR :
+            (FLASH->SR & 0x00000020) ? CPU.IRQ_FLASH_EVT_ALIGNMENT_ERR :
+            (FLASH->SR & 0x00000040) ? CPU.IRQ_FLASH_EVT_PARALLEISM_ERR :
+            (FLASH->SR & 0x00000080) ? CPU.IRQ_FLASH_EVT_SEQUENCE_ERR : CPU.IRQ_EVT_INDEX_ERROR;
+
+    handler = CPU.getHandler(evt);
+
+    if(handler == NULL) {
+
+        assert_failed("Attempted to access a NULL pointer.", __LINE__);
+    }
+
+    handler();
+
+    CPU.clearEventTrigger(evt);
+}
+
+void RCC_IRQHandler(void) {
+
+    CPUClass::EventInterrupt evt;
+    CallbackHandler handler;
+
+    evt = (RCC->CIR & 0x00000001) ? CPU.IRQ_RCC_EVT_LSI_READY :
+            (RCC->CIR & 0x00000002) ? CPU.IRQ_RCC_EVT_LSE_READY :
+            (RCC->CIR & 0x00000004) ? CPU.IRQ_RCC_EVT_HSI_READY :
+            (RCC->CIR & 0x00000008) ? CPU.IRQ_RCC_EVT_HSE_READY :
+            (RCC->CIR & 0x00000010) ? CPU.IRQ_RCC_EVT_PLL_READY :
+            (RCC->CIR & 0x00000020) ? CPU.IRQ_RCC_EVT_PLLI2S_READY :
+            (RCC->CIR & 0x00000040) ? CPU.IRQ_RCC_EVT_PLLSAI_READY :
+            (RCC->CIR & 0x00000080) ? CPU.IRQ_RCC_EVT_CSS : CPU.IRQ_EVT_INDEX_ERROR;
+
+    handler = CPU.getHandler(evt);
+
+    if(handler == NULL) {
+
+        assert_failed("Attempted to access a NULL pointer.", __LINE__);
+    }
+
+    handler();
+
+    CPU.clearEventTrigger(evt);
+}
+
 void EXTI0_IRQHandler(void) {}
 void EXTI1_IRQHandler(void) {}
 void EXTI2_IRQHandler(void) {}
