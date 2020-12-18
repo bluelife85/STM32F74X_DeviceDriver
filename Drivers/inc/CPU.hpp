@@ -50,6 +50,11 @@ public:
 		IRQ_EXTI_EVT_2                                      = 22,
 		IRQ_EXTI_EVT_3                                      = 23,
 		IRQ_EXTI_EVT_4                                      = 24,
+		IRQ_DMA1_STREAM1_EVT_HALF_XSFER                     = 25,
+		IRQ_DMA1_STREAM1_EVT_XSFER_COMPLETE                 = 26,
+		IRQ_DMA1_STREAM1_EVT_XSFER_ERR                      = 27,
+		IRQ_DMA1_STREAM1_EVT_FIFO_ERR                       = 28,
+		IRQ_DMA1_STREAM1_EVT_DIRECT_MODE_ERR                = 29
 	};
 	CPUClass();
 	void enableIRQ(enum CoreInterrupt irq, void (*evt)(void));

@@ -241,6 +241,21 @@ void CPUClass::clearEventTrigger(enum EventInterrupt irq) {
 	case this->IRQ_EXTI_EVT_4:
 	    EXTI->PR |= 0x00000010;
 	    break;
+	case this->IRQ_DMA1_STREAM1_EVT_HALF_XSFER:
+	    DMA1->LIFCR |= 0x00000010;
+	    break;
+	case this->IRQ_DMA1_STREAM1_EVT_XSFER_COMPLETE:
+	    DMA1->LIFCR |= 0x00000020;
+	    break;
+	case this->IRQ_DMA1_STREAM1_EVT_XSFER_ERR:
+	    DMA1->LIFCR |= 0x00000008;
+	    break;
+	case this->IRQ_DMA1_STREAM1_EVT_FIFO_ERR:
+	    DMA1->LIFCR |= 0x00000001;
+	    break;
+	case this->IRQ_DMA1_STREAM1_EVT_DIRECT_MODE_ERR:
+	    DMA1->LIFCR |= 0x00000004;
+	    break;
 	}
 }
 

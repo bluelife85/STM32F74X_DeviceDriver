@@ -304,7 +304,29 @@ void EXTI4_IRQHandler(void) {
     CPU.clearEventTrigger(CPU.IRQ_EXTI_EVT_4);
 }
 
-void DMA1_Stream0_IRQHandler(void) {}
+void DMA1_Stream0_IRQHandler(void) {
+
+    CPUClass::EventInterrupt evt;
+    CallbackHandler handler;
+
+    evt = ((DMA1->LISR & 0x00000001) && (DMA1_Stream0->FCR & 0x00000080)) ? CPU.IRQ_DMA1_STREAM1_EVT_FIFO_ERR :
+          ((DMA1->LISR & 0x00000004) && (DMA1_Stream0->CR & 0x0000002)) ? CPU.IRQ_DMA1_STREAM1_EVT_DIRECT_MODE_ERR :
+          ((DMA1->LISR & 0x00000008) && (DMA1_Stream0->CR & 0x0000004)) ? CPU.IRQ_DMA1_STREAM1_EVT_XSFER_ERR :
+          ((DMA1->LISR & 0x00000010) && (DMA1_Stream0->CR & 0x0000008)) ? CPU.IRQ_DMA1_STREAM1_EVT_HALF_XSFER :
+          ((DMA1->LISR & 0x00000020) && (DMA1_Stream0->CR & 0x0000010)) ? CPU.IRQ_DMA1_STREAM1_EVT_XSFER_COMPLETE :
+                  CPU.IRQ_EVT_INDEX_ERROR;
+
+    handler = CPU.getHandler(evt);
+
+    if(handler == NULL) {
+
+        assert_failed("Attempted to access a NULL pointer.", __LINE__);
+    }
+
+    handler();
+
+    CPU.clearEventTrigger(evt);
+}
 void DMA1_Stream1_IRQHandler(void) {}
 void DMA1_Stream2_IRQHandler(void) {}
 void DMA1_Stream3_IRQHandler(void) {}
